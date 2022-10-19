@@ -13,6 +13,8 @@
 // }
 // draw();
 
+
+
 const button = document.getElementById('button')
 button.addEventListener('click', () => {
     const canvas = document.getElementById('canvas')
@@ -65,8 +67,12 @@ button.addEventListener('click', () => {
 
 
 const canvas = document.getElementById('canvas');
+canvas.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    console.log('no')
+}, false);
 const ctx = canvas.getContext('2d');
-ctx.lineWidth = 10;
+ctx.lineWidth = 2;
 ctx.strokeStyle = 'black';
 
 let isDrawing = false;
@@ -82,13 +88,21 @@ function drawLine(x1, y1, x2, y2) {
 }
 
 canvas.addEventListener('mousedown', e => {
-    x = e.offsetX;
-    y = e.offsetY;
-    isDrawing = true;
+    if (e.button == 2) {
+        e.preventDefault();
+    }
+    else {
+        x = e.offsetX;
+        y = e.offsetY;
+        isDrawing = true;
+    }
 });
 
 canvas.addEventListener('mousemove', e => {
-    if (isDrawing === true) {
+    if (e.button == 2) {
+        e.preventDefault();
+    }
+    else if (isDrawing === true) {
         drawLine(x, y, e.offsetX, e.offsetY);
         x = e.offsetX;
         y = e.offsetY;
@@ -96,7 +110,10 @@ canvas.addEventListener('mousemove', e => {
 });
 
 window.addEventListener('mouseup', e => {
-    if (isDrawing === true) {
+    if (e.button == 2) {
+        e.preventDefault();
+    }
+    else if (isDrawing === true) {
         drawLine(x, y, e.offsetX, e.offsetY);
         x = 0;
         y = 0;
