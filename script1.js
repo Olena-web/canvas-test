@@ -24,7 +24,7 @@ const drawLine = () => {
     context.moveTo(startPosition.x, startPosition.y);
     context.lineTo(lineCoordinates.x, lineCoordinates.y);
     context.stroke();
-
+    context.closePath();
 }
 
 const mouseDownListener = (event) => {
@@ -33,19 +33,20 @@ const mouseDownListener = (event) => {
     } else if (isDrawStart !== true) {
         startPosition = getClientOffset(event);
         isDrawStart = true;
-        console.log('click', startPosition)
     }
 }
 
 const mouseMoveListener = (event) => {
     if (event.button == 2) {
         event.preventDefault();
-    } else if (!isDrawStart) {
+    }
+    else if (!isDrawStart) {
         return;
     } else {
         lineCoordinates = getClientOffset(event);
         clearCanvas();
         drawLine();
+        context.restore();
         hitpaint(context, event);
     }
 
@@ -57,24 +58,20 @@ const mouseupListener = (event) => {
 
     } else if (isDrawStart === true) {
         isDrawStart = false;
-        context.restore();
         saveCanvas();
-        console.log('click end', lineCoordinates)
+        const dataUrl = localStorage.getItem('canvas');
+        // console.log(dataUrl)
+        context.drawImage(new Image(dataUrl), 0, 0);
     }
 }
 
 const clearCanvas = () => {
     context.clearRect(0, 0, canvasEle.width, canvasEle.height);
+    context.restore();
 }
 const saveCanvas = () => {
-    context.save();
     const dataURL = canvasEle.toDataURL();
-    const img = new Image();
-    img.src = dataURL;
-    console.log(dataURL);
-    img.onload = () => {
-        context.drawImage(img, 0, 0);
-    }
+    localStorage.setItem('canvas', dataURL);
 }
 
 function hitpaint(context, event) {
@@ -117,17 +114,9 @@ function checkClick(event) {
 
 canvasEle.addEventListener('click', checkClick, false);
 canvasEle.addEventListener('mousemove', mouseMoveListener);
-//canvasEle.addEventListener('click', mouseupListener, false);
-//canvasEle.addEventListener('click', hitpaint(this.getContext("2d"), event));
 
 canvasEle.addEventListener('touchstart', mouseDownListener);
 canvasEle.addEventListener('touchmove', mouseMoveListener);
 canvasEle.addEventListener('touchend', mouseupListener);
 
 button.addEventListener('click', clearCanvas);
-
-// canvas.onclick = function (event) {
-//     if (hitpaint(this.getContext("2d"), event)) {
-//         // alert("Ecть попадание!"); // Щелчок в пределах текущего контура
-//     }
-// };
