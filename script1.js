@@ -61,7 +61,7 @@ const mouseupListener = (event) => {
         saveCanvas();
         const dataUrl = localStorage.getItem('canvas');
         // console.log(dataUrl)
-        context.drawImage(new Image(dataUrl), 0, 0);
+        // context.drawImage(new Image(dataUrl), 0, 0);
     }
 }
 
@@ -97,6 +97,14 @@ function hitpaint(context, event) {
         }
     }
     // Иначе это был промах, return false;
+}
+
+function takeSnapShot() {
+    snapshot = context.getImageData(0, 0, canvas.width, canvas.height);
+}
+//These must be added to dragStart()
+function restoreSnapShot() {
+    context.putImageData(snapshot, 0, 0);
 }
 
 let clickCount = 0;

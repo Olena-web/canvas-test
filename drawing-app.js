@@ -1,3 +1,5 @@
+//https://codepen.io/seangeleno/pen/BjGexE
+
 var canvas,
     context,
     dragging = false, //this will be dragging if mouse move is followed by mouse down
@@ -172,19 +174,19 @@ function dragStop(event) {
 }
 
 //Line Width Here
-function changeLineWidth() {
+function changeLineWidth(event) {
     context.lineWidth = this.value;
     //**important**
     //event.stopPropagation() prevents the vent from bubblim up the DOM tree, preventing any parent handlers from being notified of the event.
     event.stopPropagation();
 }
 //Fill Color
-function changeFillStyle() {
+function changeFillStyle(event) {
     context.fillStyle = this.value;
     event.stopPropagation();
 }
 //Stroke Color
-function changeStrokeStyle() {
+function changeStrokeStyle(event) {
     context.strokeStyle = this.value;
     event.stopPropagation();
 }
