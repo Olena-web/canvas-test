@@ -69,12 +69,15 @@ function drawPoint(context, x, y, color, size) {
     }
     let pointX = Math.round(x);
     let pointY = Math.round(y);
-    //restoreSnapShot();
+    restoreSnapShot();
     context.beginPath();
     context.fillStyle = color;
     context.arc(pointX, pointY, size, 0 * Math.PI, 2 * Math.PI);
     context.fill();
+    context.stroke();
 }
+
+let coordinates = [];
 
 function hitpaint(context, event) {
     canvas = context.canvas;
@@ -84,11 +87,13 @@ function hitpaint(context, event) {
     let pixels = context.getImageData(x, y, 1, 1);
     for (let i = 3; i < pixels.data.length; i += 4) {
         if (pixels.data[i] !== 0) {
-            drawPoint(context, x, y, 'red', 6);
-            context.save();
-            context.restore();
+            coordinates.push({ x: x, y: y });
+        }
+        for (let i = 0; i < coordinates.length; i++) {
+            drawPoint(context, coordinates[i].x, coordinates[i].y, 'red', 5);
         }
     }
+
 }
 
 function init() {
